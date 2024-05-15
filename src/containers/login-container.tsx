@@ -2,9 +2,17 @@
 
 import React from 'react'
 import { Tabs, Tab, Input, Link, Button } from '@nextui-org/react'
+import { signIn } from 'next-auth/react'
 
 export default function LoginContainer() {
   const [selected, setSelected] = React.useState<string>('login')
+
+  const handleLogin = async () => {
+    await signIn('credentials', {
+      username: 'admin',
+      password: 'Co0p3r$1267'
+    })
+  }
 
   return (
     <div className='flex flex-col w-full'>
@@ -36,7 +44,7 @@ export default function LoginContainer() {
               </Link>
             </p>
             <div className='flex gap-2 justify-end'>
-              <Button fullWidth color='primary'>
+              <Button fullWidth color='primary' onClick={handleLogin}>
                 Acceder
               </Button>
             </div>

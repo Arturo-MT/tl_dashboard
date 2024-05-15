@@ -1,8 +1,12 @@
+'use client'
+
 import Image from 'next/image'
 import banner from '/public/media/banner.jpg'
-import { NavBar } from '@/components/nav-bar'
+import { useSession } from 'next-auth/react'
 
-export default function App() {
+export default function Home() {
+  const { data: session } = useSession()
+  console.log(session)
   return (
     <div className='py-6 px-48 flex flex-col items-center gap-16'>
       <Image src={banner} alt='banner' width={1000} height={2000} />

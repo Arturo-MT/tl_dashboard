@@ -1,9 +1,16 @@
+import { AxiosProvider } from '@/context/auth'
+import { NextUIProvider } from '@nextui-org/react'
+
 export default function App({
-  Component,
-  pageProps: { session, ...pageProps }
+  Component
 }: Readonly<{
   Component: React.ComponentType
-  pageProps: { session: any }
 }>) {
-  return <Component {...pageProps} />
+  return (
+    <NextUIProvider>
+      <AxiosProvider>
+        <Component />
+      </AxiosProvider>
+    </NextUIProvider>
+  )
 }
