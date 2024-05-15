@@ -10,7 +10,7 @@ export default function LoginContainer() {
   const handleLogin = async () => {
     await signIn('credentials', {
       username: 'admin',
-      password: 'Co0p3r$1267'
+      password: 'admin'
     })
   }
 
