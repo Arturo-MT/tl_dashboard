@@ -3,21 +3,35 @@
 import * as React from 'react'
 import { BsFillMoonStarsFill, BsFillSunFill } from 'react-icons/bs'
 import { useTheme } from 'next-themes'
-
 import { Button } from '@nextui-org/button'
 
 export function ModeToggle() {
-  const { setTheme, theme } = useTheme()
+  const { setTheme, resolvedTheme } = useTheme()
+  const [mounted, setMounted] = React.useState(false)
+
+  React.useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  const toggleTheme = () => {
+    if (mounted) {
+      setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')
+    }
+  }
 
   return (
     <Button
-      onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+      onClick={toggleTheme}
       isIconOnly
-      color={theme === 'dark' ? 'warning' : 'primary'}
+      color={mounted && resolvedTheme === 'dark' ? 'warning' : 'primary'}
       radius='sm'
       variant='faded'
     >
-      {theme === 'dark' ? <BsFillSunFill /> : <BsFillMoonStarsFill />}
+      {mounted && resolvedTheme === 'dark' ? (
+        <BsFillSunFill />
+      ) : (
+        <BsFillMoonStarsFill />
+      )}
     </Button>
   )
 }
