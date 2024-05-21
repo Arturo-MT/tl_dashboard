@@ -20,5 +20,17 @@ export const toastErrorMessages = {
     title: 'Error desconocido',
     description: 'Ocurrió un error inesperado. Por favor, inténtelo de nuevo.',
     variant: 'destructive'
+  } as ToastMessage,
+  registerError: {
+    title: 'Error al registrar el usuario',
+    description:
+      'Hubo un error al registrar el usuario. Por favor, inténtelo de nuevo.',
+    variant: 'destructive'
+  } as ToastMessage,
+  loginAfterRegisterError: {
+    title: 'Error al iniciar sesión',
+    description:
+      'Hubo un error al iniciar sesión después de registrar el usuario. Por favor, inicie sesión manualmente.',
+    variant: 'destructive'
   } as ToastMessage
 }
