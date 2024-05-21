@@ -3,6 +3,7 @@
 import React from 'react'
 import { Tabs, Tab, Input, Link, Button } from '@nextui-org/react'
 import LoginForm from '@/containers/login-form'
+import RegisterForm from './register-form'
 
 export default function LoginContainer() {
   const [selected, setSelected] = React.useState<string>('login')
@@ -20,37 +21,7 @@ export default function LoginContainer() {
           <LoginForm setSelected={setSelected} />
         </Tab>
         <Tab key='sign-up' title='Registrarse'>
-          <form className='flex flex-col gap-4 h-[300px]'>
-            <Input
-              isRequired
-              label='Name'
-              placeholder='Enter your name'
-              type='password'
-            />
-            <Input
-              isRequired
-              label='Email'
-              placeholder='Enter your email'
-              type='email'
-            />
-            <Input
-              isRequired
-              label='Password'
-              placeholder='Enter your password'
-              type='password'
-            />
-            <p className='text-center text-small'>
-              ¿Ya tienes una cuenta?{' '}
-              <Link size='sm' onPress={() => setSelected('login')}>
-                Acceder
-              </Link>
-            </p>
-            <div className='flex gap-2 justify-end'>
-              <Button fullWidth color='primary'>
-                Registrarse
-              </Button>
-            </div>
-          </form>
+          <RegisterForm setSelected={setSelected} />
         </Tab>
       </Tabs>
     </div>
