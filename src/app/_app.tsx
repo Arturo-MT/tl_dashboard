@@ -8,9 +8,7 @@ export default function App({
 }>) {
   return (
     <NextUIProvider>
-      <AxiosProvider>
-        <Component />
-      </AxiosProvider>
+      <Component />
     </NextUIProvider>
   )
 }

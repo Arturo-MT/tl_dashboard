@@ -5,6 +5,7 @@ declare module 'next-auth' {
   interface Session {
     accessToken?: string
     error?: string
+    refreshToken?: string
   }
 
   interface User extends DefaultUser {
