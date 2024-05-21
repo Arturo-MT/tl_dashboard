@@ -1,10 +1,8 @@
 import NextAuth from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import axios from 'axios'
-import { JWT } from 'next-auth/jwt'
-import { NextApiRequest, NextApiResponse } from 'next'
 
-const authHandler = NextAuth({
+const authOptions = {
   providers: [
     CredentialsProvider({
       name: 'Credentials',
@@ -13,6 +11,7 @@ const authHandler = NextAuth({
         password: { label: 'Password', type: 'password' }
       },
       authorize: async (credentials, req) => {
+        console.log('Credentials', credentials)
         try {
           const response = await axios.post(
             'http://localhost:8000/api/v1/token/',
@@ -25,9 +24,9 @@ const authHandler = NextAuth({
           const user = response.data
 
           if (user) {
-            // Ensure 'id' is always a string
             return {
-              id: credentials!.username, // Use username as a unique identifier
+              id: user.id,
+              name: user.username,
               access: user.access,
               refresh: user.refresh,
               expires_in: user.expires_in
@@ -35,39 +34,52 @@ const authHandler = NextAuth({
           } else {
             return null
           }
-        } catch (error) {
-          console.error('Login error:', error)
-          return null
+        } catch (error: any) {
+          if (error.response) {
+            if (error.response.status === 401) {
+              throw new Error('CredentialsSignin')
+            } else {
+              throw new Error('NetworkError')
+            }
+          } else {
+            throw new Error('UnknownError')
+          }
         }
       }
     })
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user }: { token: any; user: any }) {
       if (user) {
         token.accessToken = user.access
         token.refreshToken = user.refresh
-        token.accessTokenExpires = Date.now() + user.expires_in * 1000 // Assuming expires_in is in seconds
+        token.accessTokenExpires = Date.now() + user.expires_in * 1000
+        token.user = {
+          id: user.id,
+          name: user.name
+        }
       }
 
-      if (Date.now() < (token.accessTokenExpires as number)) {
+      if (Date.now() < token.accessTokenExpires) {
         return token
       }
 
       return refreshAccessToken(token)
     },
-    async session({ session, token }) {
+    async session({ session, token }: { session: any; token: any }) {
       session.accessToken = token.accessToken
       session.error = token.error
+      session.user = token.user
       return session
     }
   },
   pages: {
     signIn: '/'
-  }
-})
+  },
+  debug: true
+}
 
-async function refreshAccessToken(token: JWT) {
+async function refreshAccessToken(token: any) {
   try {
     const response = await axios.post(
       'http://localhost:8000/api/v1/token/refresh/',
@@ -93,7 +105,6 @@ async function refreshAccessToken(token: JWT) {
   }
 }
 
-const handler = (req: NextApiRequest, res: NextApiResponse) =>
-  authHandler(req, res)
+const handler = NextAuth(authOptions)
 
 export { handler as GET, handler as POST }

@@ -1,7 +1,7 @@
 import React, { createContext, useContext } from 'react'
 import axios, { AxiosInstance } from 'axios'
-import { useSession, signOut } from 'next-auth/react'
-import { QueryClient, QueryClientProvider } from 'react-query'
+import { useSession } from 'next-auth/react'
+import { QueryClientProvider } from 'react-query'
 import { queryClient } from '@/lib/utils'
 
 interface AxiosContextProps {
