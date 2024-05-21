@@ -5,16 +5,40 @@ import axios from 'axios'
 const authOptions = {
   providers: [
     CredentialsProvider({
+      id: 'tokens',
+      name: 'Tokens',
+      credentials: {
+        accessToken: { label: 'Access Token', type: 'text' },
+        refreshToken: { label: 'Refresh Token', type: 'text' },
+        username: { label: 'Username', type: 'text' }
+      },
+      authorize: async (credentials, req) => {
+        const { accessToken, refreshToken, username } = credentials ?? {}
+
+        if (accessToken && refreshToken && username) {
+          return {
+            id: username,
+            name: username,
+            access: accessToken,
+            refresh: refreshToken,
+            expires_in: 300
+          }
+        } else {
+          return null
+        }
+      }
+    }),
+    CredentialsProvider({
+      id: 'credentials',
       name: 'Credentials',
       credentials: {
         username: { label: 'Username', type: 'text' },
         password: { label: 'Password', type: 'password' }
       },
       authorize: async (credentials, req) => {
-        console.log('Credentials', credentials)
         try {
           const response = await axios.post(
-            'http://localhost:8000/api/v1/token/',
+            `${process.env.NEXT_PUBLIC_API_URL}/token/`,
             {
               username: credentials?.username,
               password: credentials?.password
@@ -49,7 +73,7 @@ const authOptions = {
     })
   ],
   callbacks: {
-    async jwt({ token, user }: { token: any; user: any }) {
+    async jwt({ token, user }: any) {
       if (user) {
         token.accessToken = user.access
         token.refreshToken = user.refresh
@@ -66,7 +90,7 @@ const authOptions = {
 
       return refreshAccessToken(token)
     },
-    async session({ session, token }: { session: any; token: any }) {
+    async session({ session, token }: any) {
       session.accessToken = token.accessToken
       session.error = token.error
       session.user = token.user
@@ -82,7 +106,7 @@ const authOptions = {
 async function refreshAccessToken(token: any) {
   try {
     const response = await axios.post(
-      'http://localhost:8000/api/v1/token/refresh/',
+      `${process.env.NEXT_PUBLIC_API_URL}/token/refresh/`,
       {
         refresh: token.refreshToken
       }
