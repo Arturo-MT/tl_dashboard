@@ -6,10 +6,18 @@ import { useSession } from 'next-auth/react'
 
 export default function Home() {
   const { data: session } = useSession()
-  console.log(session)
   return (
     <div className='py-6 px-48 flex flex-col items-center gap-16'>
-      <Image src={banner} alt='banner' width={1000} height={2000} />
+      <div style={{ position: 'relative', width: '100%', height: '400px' }}>
+        <Image
+          src={banner}
+          alt='Banner'
+          fill
+          sizes='100vw'
+          style={{ objectFit: 'cover' }}
+          priority
+        />
+      </div>
       <p className='text-bold'>
         Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet, consectetur
         adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
@@ -68,9 +76,8 @@ export default function Home() {
         aliquam sem et tortor consequat. Eu nisl nunc mi ipsum faucibus. Cras
         fermentum odio eu feugiat pretium nibh. Vel pharetra vel turpis nunc
         eget lorem dolor sed viverra. Sollicitudin tempor id eu nisl nunc mi
-        ipsum faucibus. Sed id semper risus in hendrerit gravida rutrum. Eget
-        nulla facilisi etiam dignissim. Erat imperdiet sed euismod nisi. Risus
-        in hendrerit gravida rutrum quisque non tellus orci ac.
+        ipsum faucibus. Sed id semper risus in hendrerit gravida rutrum quisque
+        non tellus orci ac.
       </p>
     </div>
   )

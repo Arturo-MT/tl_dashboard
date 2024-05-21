@@ -8,6 +8,7 @@ import './globals.css'
 import { ThemeProvider } from '@/components/theme-provider'
 import { NavBar } from '@/components/nav-bar'
 import { SessionProvider } from 'next-auth/react'
+import { Toaster } from '@/components/ui/toaster'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -30,6 +31,7 @@ export default function RootLayout({
               <NavBar />
               {children}
             </main>
+            <Toaster />
           </ThemeProvider>
         </SessionProvider>
       </body>
