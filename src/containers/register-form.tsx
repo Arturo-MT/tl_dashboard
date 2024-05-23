@@ -1,23 +1,20 @@
-'use client'
-
 import React from 'react'
-import { useFormik } from 'formik'
-import * as Yup from 'yup'
-import { Input, Link, Button } from '@nextui-org/react'
-import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { useRegiserUserMutation } from '@/hooks/api/users'
-import { toastErrorMessages } from '@/lib/toast-messages'
+import { signIn } from 'next-auth/react'
 import { useToast } from '@/components/ui/use-toast'
+import { toastErrorMessages } from '@/lib/toast-messages'
+import FormCreator from '@/components/form-creator'
+import { useRegiserUserMutation } from '@/hooks/api/users'
+import * as Yup from 'yup'
+import { AxiosError } from 'axios'
 
-const RegisterForm = ({
-  setSelected
-}: {
+interface RegisterFormProps {
   setSelected: (value: string) => void
-}) => {
-  const router = useRouter()
-  const { toast } = useToast()
+}
 
+const RegisterForm: React.FC<RegisterFormProps> = ({ setSelected }) => {
+  const { toast } = useToast()
+  const router = useRouter()
   const { mutate, isLoading } = useRegiserUserMutation({
     config: {
       onSuccess: async (data: any) => {
@@ -40,77 +37,83 @@ const RegisterForm = ({
           toast(toastErrorMessages.loginAfterRegisterError)
         }
       },
-      onError: () => {
-        toast(toastErrorMessages.registerError)
+      onError: (error: AxiosError) => {
+        handleError(error.response?.status)
       }
     }
   })
 
-  const formik = useFormik({
-    initialValues: {
-      username: '',
-      email: '',
-      password: '',
-      confirmPassword: ''
-    },
-    validationSchema: Yup.object({
-      username: Yup.string().required('Required'),
-      email: Yup.string().email('Invalid email address').required('Required'),
-      password: Yup.string()
-        .min(6, 'Password must be at least 6 characters')
-        .required('Required'),
-      confirmPassword: Yup.string()
-        .oneOf([Yup.ref('password'), undefined], 'Passwords must match')
-        .required('Required')
-    }),
-    onSubmit: (values) => {
-      const { username, email, password } = values
-      mutate({ username, email, password })
+  const handleError = (errorType: number | undefined) => {
+    console.log(errorType)
+    switch (errorType) {
+      case 400:
+        return toast(toastErrorMessages.registerError)
+      default:
+        return toast(toastErrorMessages.unknownError)
     }
-  })
+  }
+
+  const formConfig = {
+    fields: [
+      {
+        name: 'username',
+        label: 'Username',
+        placeholder: 'Enter your username',
+        type: 'text',
+        isRequired: true,
+        validation: Yup.string().required('Username is required')
+      },
+      {
+        name: 'email',
+        label: 'Email',
+        placeholder: 'Enter your email',
+        type: 'email',
+        isRequired: true,
+        validation: Yup.string()
+          .email('Invalid email address')
+          .required('Email is required')
+      },
+      {
+        name: 'password',
+        label: 'Password',
+        placeholder: 'Enter your password',
+        type: 'password',
+        isRequired: true,
+        validation: Yup.string()
+          .min(8, 'Password must be at least 8 characters')
+          .required('Password is required')
+      },
+      {
+        name: 'confirmPassword',
+        label: 'Confirm Password',
+        placeholder: 'Confirm your password',
+        type: 'password',
+        isRequired: true,
+        validation: Yup.string()
+          .oneOf([Yup.ref('password'), undefined], 'Passwords must match')
+          .required('Confirm Password is required')
+      }
+    ],
+    additionalLinks: [
+      {
+        text: '¿Ya tienes una cuenta?',
+        label: 'Iniciar Sesión',
+        onPress: () => setSelected('login')
+      }
+    ],
+    submitButtonLabel: 'Registrarse'
+  }
+
+  const handleSubmit = async (values: Record<string, any>) => {
+    mutate(values)
+  }
 
   return (
-    <form className='flex flex-col gap-4' onSubmit={formik.handleSubmit}>
-      <Input
-        isRequired
-        label='Username'
-        placeholder='Enter your username'
-        type='text'
-        {...formik.getFieldProps('username')}
-      />
-      <Input
-        isRequired
-        label='Email'
-        placeholder='Enter your email'
-        type='email'
-        {...formik.getFieldProps('email')}
-      />
-      <Input
-        isRequired
-        label='Password'
-        placeholder='Enter your password'
-        type='password'
-        {...formik.getFieldProps('password')}
-      />
-      <Input
-        isRequired
-        label='Confirm Password'
-        placeholder='Confirm your password'
-        type='password'
-        {...formik.getFieldProps('confirmPassword')}
-      />
-      <p className='text-center text-small'>
-        ¿Ya tienes una cuenta?{' '}
-        <Link size='sm' onPress={() => setSelected('login')}>
-          Iniciar Sesión
-        </Link>
-      </p>
-      <div className='flex gap-2 justify-end'>
-        <Button fullWidth color='primary' type='submit' isLoading={isLoading}>
-          Registrarse
-        </Button>
-      </div>
-    </form>
+    <FormCreator
+      config={formConfig}
+      onSubmit={handleSubmit}
+      isLoading={isLoading}
+    />
   )
 }
 
