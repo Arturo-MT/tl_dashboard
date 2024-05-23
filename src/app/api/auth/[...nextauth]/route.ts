@@ -100,7 +100,7 @@ const authOptions = {
   pages: {
     signIn: '/'
   },
-  debug: true
+  debug: false
 }
 
 async function refreshAccessToken(token: any) {
