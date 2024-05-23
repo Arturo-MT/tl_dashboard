@@ -10,15 +10,25 @@ import {
   SheetTrigger
 } from '@/components/ui/sheet'
 import LoginContainer from './login-container'
-import { useSession } from 'next-auth/react'
+import { signOut, useSession } from 'next-auth/react'
 
 export function LoginSheet() {
   const { data: session } = useSession()
 
   if (session && session.user) {
     return (
-      <Button variant='faded' radius='sm' color='primary'>
-        Ir al panel de control
+      <Button
+        variant='faded'
+        radius='sm'
+        color='primary'
+        onPress={() =>
+          signOut({
+            callbackUrl: '/',
+            redirect: false
+          })
+        }
+      >
+        Cerrar sesión
       </Button>
     )
   }
