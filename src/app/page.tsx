@@ -2,10 +2,9 @@
 
 import Image from 'next/image'
 import banner from '/public/media/banner.jpg'
-import { useSession } from 'next-auth/react'
+import PublicWrapper from '@/containers/public-wrapper'
 
-export default function Home() {
-  const { data: session } = useSession()
+function Home() {
   return (
     <div className='py-6 px-48 flex flex-col items-center gap-16'>
       <div style={{ position: 'relative', width: '100%', height: '400px' }}>
@@ -82,3 +81,5 @@ export default function Home() {
     </div>
   )
 }
+
+export default PublicWrapper(Home)
