@@ -1,7 +1,14 @@
 'use client'
 
 import React from 'react'
-import { useFormik } from 'formik'
+import {
+  ErrorMessage,
+  Field,
+  Form,
+  Formik,
+  FormikProvider,
+  useFormik
+} from 'formik'
 import * as Yup from 'yup'
 import { Input, Link, Button } from '@nextui-org/react'
 import { signIn } from 'next-auth/react'
@@ -46,71 +53,81 @@ const RegisterForm = ({
     }
   })
 
-  const formik = useFormik({
-    initialValues: {
-      username: '',
-      email: '',
-      password: '',
-      confirmPassword: ''
-    },
-    validationSchema: Yup.object({
-      username: Yup.string().required('Required'),
-      email: Yup.string().email('Invalid email address').required('Required'),
-      password: Yup.string()
-        .min(6, 'Password must be at least 6 characters')
-        .required('Required'),
-      confirmPassword: Yup.string()
-        .oneOf([Yup.ref('password'), undefined], 'Passwords must match')
-        .required('Required')
-    }),
-    onSubmit: (values) => {
-      const { username, email, password } = values
-      mutate({ username, email, password })
-    }
-  })
-
   return (
-    <form className='flex flex-col gap-4' onSubmit={formik.handleSubmit}>
-      <Input
-        isRequired
-        label='Username'
-        placeholder='Enter your username'
-        type='text'
-        {...formik.getFieldProps('username')}
-      />
-      <Input
-        isRequired
-        label='Email'
-        placeholder='Enter your email'
-        type='email'
-        {...formik.getFieldProps('email')}
-      />
-      <Input
-        isRequired
-        label='Password'
-        placeholder='Enter your password'
-        type='password'
-        {...formik.getFieldProps('password')}
-      />
-      <Input
-        isRequired
-        label='Confirm Password'
-        placeholder='Confirm your password'
-        type='password'
-        {...formik.getFieldProps('confirmPassword')}
-      />
-      <p className='text-center text-small'>
-        ¿Ya tienes una cuenta?{' '}
-        <Link size='sm' onPress={() => setSelected('login')}>
-          Iniciar Sesión
-        </Link>
-      </p>
-      <div className='flex gap-2 justify-end'>
-        <Button fullWidth color='primary' type='submit' isLoading={isLoading}>
-          Registrarse
-        </Button>
-      </div>
-    </form>
+    <Formik
+      initialValues={{
+        username: '',
+        email: '',
+        password: '',
+        confirmPassword: ''
+      }}
+      onSubmit={(values) => {
+        mutate(values)
+      }}
+      validationSchema={Yup.object({
+        username: Yup.string().required('Requerido'),
+        email: Yup.string().email('Email inválido').required('Requerido'),
+        password: Yup.string()
+          .required('Requerido')
+          .min(6, 'La contraseña debe tener al menos 6 caracteres'),
+        confirmPassword: Yup.string()
+          .required('Requerido')
+          .oneOf([Yup.ref('password')], 'Las contraseñas no coinciden')
+      })}
+    >
+      {({ errors, touched }) => {
+        return (
+          <Form className='flex flex-col gap-4'>
+            <Field
+              as={Input}
+              isRequired
+              label='Nomvre de Usuario'
+              type='text'
+              name='username'
+            />
+            <Field
+              as={Input}
+              isRequired
+              label='Email'
+              type='email'
+              name='email'
+            />
+            <Field
+              as={Input}
+              isRequired
+              label='Contraseña'
+              type='password'
+              name='password'
+            />
+            <Field
+              as={Input}
+              isRequired
+              label='Confirma tu Contraseña'
+              type='password'
+              name='confirmPassword'
+              isInvalid={!!errors.confirmPassword && !!touched.confirmPassword}
+              errorMessage='Las contraseñas no coinciden'
+            />
+            <p className='text-center text-small'>
+              ¿Ya tienes una cuenta?{' '}
+              <Link size='sm' onPress={() => setSelected('login')}>
+                Iniciar Sesión
+              </Link>
+            </p>
+            <div className='flex gap-2 justify-end'>
+              <Button
+                fullWidth
+                color='primary'
+                type='submit'
+                isLoading={isLoading}
+              >
+                Registrarse
+              </Button>
+            </div>
+          </Form>
+        )
+      }}
+    </Formik>
   )
 }
 
