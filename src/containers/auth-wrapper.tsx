@@ -22,7 +22,7 @@ const AuthWrapper = <P extends object>(
     if (status === 'loading' || !session) {
       return (
         <div className='h-screen flex items-center justify-center'>
-          <CircularProgress label='Loading...' size='lg' />
+          <CircularProgress label='Cargando...' size='lg' />
         </div>
       )
     }

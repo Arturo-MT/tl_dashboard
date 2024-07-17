@@ -14,7 +14,7 @@ const PublicWrapper = <P extends object>(
     if (status === 'loading') {
       return (
         <div className='h-screen flex items-center justify-center'>
-          <CircularProgress label='Loading...' size='lg' />
+          <CircularProgress label='Cargando...' size='lg' />
         </div>
       )
     }
