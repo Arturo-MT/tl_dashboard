@@ -24,7 +24,7 @@ export function LoginSheet() {
         onPress={() =>
           signOut({
             callbackUrl: '/',
-            redirect: false
+            redirect: true
           })
         }
       >

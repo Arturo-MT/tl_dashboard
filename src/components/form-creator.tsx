@@ -26,6 +26,8 @@ const FormCreator: React.FC<FormCreatorProps> = ({
       return values
     }, {} as Record<string, string>),
     validationSchema: validationSchema,
+    validateOnChange: true,
+    validateOnBlur: true,
     onSubmit: async (values) => {
       try {
         await onSubmit(values)
