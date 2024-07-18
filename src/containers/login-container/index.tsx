@@ -3,7 +3,7 @@
 import React from 'react'
 import { Tabs, Tab, Input, Link, Button } from '@nextui-org/react'
 import LoginForm from '@/containers/login-form'
-import RegisterForm from './register-form'
+import RegisterForm from '../register-form'
 
 export default function LoginContainer() {
   const [selected, setSelected] = React.useState<string>('login')

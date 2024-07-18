@@ -6,7 +6,7 @@ import * as Yup from 'yup'
 import { Input, Link, Button } from '@nextui-org/react'
 import { signIn } from 'next-auth/react'
 import { useToast } from '@/components/ui/use-toast'
-import { toastErrorMessages } from '@/lib/toast-messages'
+import { toastErrorMessages } from '@/lib/types/toast-messages'
 import { useRouter } from 'next/navigation'
 
 const LoginForm = ({ setSelected }: { setSelected: (value: any) => void }) => {

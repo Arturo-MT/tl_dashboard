@@ -5,7 +5,7 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { CircularProgress } from '@nextui-org/progress'
 import { NavBar } from '@/components/nav-bar'
-import DashboardSidebar from './dashboard-sidebar'
+import DashboardSidebar from '../dashboard-sidebar'
 
 const AuthWrapper = <P extends object>(
   WrappedComponent: React.ComponentType<P>

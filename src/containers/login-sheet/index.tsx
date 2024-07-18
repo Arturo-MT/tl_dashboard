@@ -9,7 +9,7 @@ import {
   SheetTitle,
   SheetTrigger
 } from '@/components/ui/sheet'
-import LoginContainer from './login-container'
+import LoginContainer from '../login-container'
 import { signOut, useSession } from 'next-auth/react'
 
 export function LoginSheet() {

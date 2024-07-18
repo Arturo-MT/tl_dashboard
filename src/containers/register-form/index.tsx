@@ -14,7 +14,7 @@ import { Input, Link, Button } from '@nextui-org/react'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useRegiserUserMutation } from '@/hooks/api/users'
-import { toastErrorMessages } from '@/lib/toast-messages'
+import { toastErrorMessages } from '@/lib/types/toast-messages'
 import { useToast } from '@/components/ui/use-toast'
 
 const RegisterForm = ({
