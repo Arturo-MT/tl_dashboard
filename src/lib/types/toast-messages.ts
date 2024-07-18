@@ -1,3 +1,9 @@
+interface ToastMessage {
+  title: string
+  description: string
+  variant: 'destructive' | 'default' | null | undefined
+}
+
 export const toastErrorMessages = {
   loginError: {
     title: 'Hubo un error en el inicio de sesión',
